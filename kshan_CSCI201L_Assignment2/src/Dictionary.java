@@ -45,8 +45,7 @@ public class Dictionary<AnyType extends Comparable<AnyType>>  implements Diction
 	/**
 	 * Creates an empty dictionary.
 	 */
-	public Dictionary()
-	{
+	public Dictionary() {
 		size = 0;
 		head = null;
 	}
@@ -55,16 +54,16 @@ public class Dictionary<AnyType extends Comparable<AnyType>>  implements Diction
 	 * Adds e to the dictionary, thus making contains(e) true.
 	 * Increments size so as to ensure size() is correct.
 	 */
-	public void add(AnyType e)
-	{
-		if(e == null)
-		{
+	public void add(AnyType e) {
+		if (e == null) {
 			return;
 		}
 
 		/*
 		 * Your code goes here...
 		 */
+
+
 
 		throw new RuntimeAnyTypexception("You need to implement this method!");
 	}
@@ -74,16 +73,15 @@ public class Dictionary<AnyType extends Comparable<AnyType>>  implements Diction
 	 * it is still false.
 	 * Otherwise, decrements size so as to ensure size() is correct.
 	 */
-	public void remove(AnyType e)
-	{
-		if(e == null)
-		{
+	public void remove(AnyType e) {
+		if (e == null) {
 			return;
 		}
 
 		/*
 		 * Your code goes here...
 		 */
+
 
 		throw new RuntimeAnyTypexception("You need to implement this method!");
 	}
@@ -127,8 +125,7 @@ public class Dictionary<AnyType extends Comparable<AnyType>>  implements Diction
 	/**
 	 * Returns the size of the dictionary.
 	 */
-	public int size()
-	{
+	public int size() {
 		return size;
 	}
 
@@ -140,8 +137,7 @@ public class Dictionary<AnyType extends Comparable<AnyType>>  implements Diction
 	 * 		-the resulting frequency of any item is the sum of its frequency in the two dictionaries
 	 * 		-the resulting size is the sum of the two sizes
 	 */
-	public void combine(Dictionary<AnyType> other)
-	{
+	public void combine(Dictionary<AnyType> other) {
 		if(other == null || this == other)
 		{
 			return;
@@ -157,8 +153,7 @@ public class Dictionary<AnyType extends Comparable<AnyType>>  implements Diction
 	/**
 	 * Returns a helpful string representation of the dictionary.
 	 */
-	public String toString()
-	{
+	public String toString() {
 		return "";
 	}
 
@@ -169,13 +164,25 @@ public class Dictionary<AnyType extends Comparable<AnyType>>  implements Diction
 	 *
 	 * This is very useful for implementing add(e)!!!  See the lecture notes for the theory behind this.
 	 */
-	private void mergeDown()
-	{
+	private void mergeDown() {
 		/*
 		 * Your code goes here...
 		 */
+		Node temp = head;
+		mergeDown_helper(temp);
+
+
+
+		Node temp = head;
+		if (temp != null) {
+
+		}
 
 		throw new RuntimeAnyTypexception("You need to implement this method!");
+	}
+
+	private void mergeDown_helper(Node root) {
+
 	}
 
 	/**
@@ -189,8 +196,7 @@ public class Dictionary<AnyType extends Comparable<AnyType>>  implements Diction
 	 * O(log(a.length))
 	 */
 	@SuppressWarnings("unchecked")
-	public static int binarySearch(Comparable[] a, Comparable item)
-	{
+	public static int binarySearch(Comparable[] a, Comparable item) {
 		/*
 		 * Your code goes here...
 		 */
@@ -208,8 +214,7 @@ public class Dictionary<AnyType extends Comparable<AnyType>>  implements Diction
 	 * O(log(a.length) + frequency(item))
 	 */
 	@SuppressWarnings("unchecked")
-	public static int frequency(Comparable[] a, Comparable item)
-	{
+	public static int frequency(Comparable[] a, Comparable item) {
 		/*
 		 * Your code goes here...
 		 */
@@ -227,11 +232,29 @@ public class Dictionary<AnyType extends Comparable<AnyType>>  implements Diction
 	 * O(a.length + b.length)
 	 */
 	@SuppressWarnings("unchecked")
-	public static Comparable[] merge(Comparable[] a, Comparable[] b)
-	{
+	public static Comparable[] merge(Comparable[] a, Comparable[] b) {
 		/*
 		 * Your code goes here...
 		 */
+		Comparable[] newArray = new Comparable[a.length+b.length];
+		int i = 0;
+		int j = 0;
+		int k = 0;
+
+		while (i < (a.length + b.length) && j < (a.length + b.length)) {
+			if (a[i].compareTo(b[j]) < 0) {
+				newArray[k] = a[i];
+				i++;
+				k++;
+			}
+			else {
+				newArray[k] = a[j];
+				j++;
+				k++;
+			}
+		}
+
+		return newArray;
 
 		throw new RuntimeAnyTypexception("You need to implement this method!");
 	}
@@ -239,8 +262,7 @@ public class Dictionary<AnyType extends Comparable<AnyType>>  implements Diction
 	/**
 	 * Returns base^exponent.  This is useful for implementing splitUp(a,k)
 	 */
-	private static int power(int base, int exponent)
-	{
+	private static int power(int base, int exponent) {
 		return (int)(Math.pow(base, exponent));
 	}
 
@@ -257,8 +279,7 @@ public class Dictionary<AnyType extends Comparable<AnyType>>  implements Diction
 	 * O(a.length)
 	 */
 	@SuppressWarnings("unchecked")
-	public static java.util.Queue<Comparable[]> splitUp(Comparable[] a, int k)
-	{
+	public static java.util.Queue<Comparable[]> splitUp(Comparable[] a, int k) {
 		/*
 		 * We'll just use a LinkedList as a Queue in this fashion.  Take a look at the
 		 * API for the java.util.Queue interface.
