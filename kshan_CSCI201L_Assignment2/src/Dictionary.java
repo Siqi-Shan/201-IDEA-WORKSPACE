@@ -40,6 +40,7 @@ public class Dictionary<AnyType extends Comparable<AnyType>>  implements Diction
 	 * The head reference to the linked list of Nodes.
 	 * Take a look at the Node class.
 	 */
+	@SuppressWarnings("FieldMayBeFinal")
 	private Node head;
 
 	/**
@@ -64,12 +65,12 @@ public class Dictionary<AnyType extends Comparable<AnyType>>  implements Diction
 		 */
 		Node newNode = new Node(0, new Comparable[power(2, 0)], null);
 		newNode.array[0] = e;
+		newNode.next = this.head;
+		this.head = newNode;
 		mergeDown();
 		size++;
 
-		
-
-		throw new RuntimeException("You need to implement this method!");
+		//throw new RuntimeException("You need to implement this method!");
 	}
 
 	/**
@@ -97,10 +98,8 @@ public class Dictionary<AnyType extends Comparable<AnyType>>  implements Diction
 	/**
 	 * Returns true iff the dictionary contains an element equal to e.
 	 */
-	public boolean contains(AnyType e)
-	{
-		if(e == null)
-		{
+	public boolean contains(AnyType e) {
+		if(e == null) {
 			return false;
 		}
 
@@ -130,10 +129,8 @@ public class Dictionary<AnyType extends Comparable<AnyType>>  implements Diction
 	 * This is logically equivalent to the number of times remove(e) needs to be performed
 	 * in order for contains(e) to be false.
 	 */
-	public int frequency(AnyType e)
-	{
-		if(e == null)
-		{
+	public int frequency(AnyType e) {
+		if(e == null) {
 			return 0;
 		}
 
@@ -170,16 +167,39 @@ public class Dictionary<AnyType extends Comparable<AnyType>>  implements Diction
 	 * 		-the resulting size is the sum of the two sizes
 	 */
 	public void combine(Dictionary<AnyType> other) {
-		if(other == null || this == other)
-		{
+		//TODO:: rewrite mergeDown here
+		if(other == null || this == other) {
 			return;
 		}
 
 		/*
 		 * Your code goes here...
 		 */
+		this.size = this.size + other.size();
 
-		throw new RuntimeException("You need to implement this method!");
+		this.head = combine_helper(this.head, other.head);
+		this.mergeDown();
+
+		//throw new RuntimeException("You need to implement this method!");
+	}
+
+	/** Recursively combining two linked lists with increasing order */
+	private Node combine_helper(Node P, Node Q) {
+		if (P == null) {
+			return Q;
+		}
+		if (Q == null) {
+			return P;
+		}
+
+		if (P.array.length < Q.array.length) {
+			P.next = combine_helper(P.next, Q);
+			return P;
+		}
+		else {
+			Q.next = combine_helper(P, Q.next);
+			return Q;
+		}
 	}
 
 	/**
@@ -191,6 +211,7 @@ public class Dictionary<AnyType extends Comparable<AnyType>>  implements Diction
 		int nodeIndex = 0;
 
 		while (current != null) {
+			//noinspection StringConcatenationInsideStringBufferAppend
 			content.append(nodeIndex + ": ");
 			content.append(current.toString());
 			content.append("\n");
@@ -216,27 +237,23 @@ public class Dictionary<AnyType extends Comparable<AnyType>>  implements Diction
 		Node temp = head;
 		mergeDown_helper(temp, temp.array);
 
-
-
-		Node temp = head;
-		if (temp != null) {
-
-		}
-
-		throw new RuntimeException("You need to implement this method!");
+		//throw new RuntimeException("You need to implement this method!");
 	}
 
+	/** Recursively merge same size arrays helper function */
 	private void mergeDown_helper(Node root, Comparable[] C) {
  		if (root == null) {
  			return;
 		}
 
- 		if (root.array.length == C.length) {
+ 		if (root.array.length == C.length && root.next.array.length != C.length) {
  			Comparable[] result = merge(root.array, C);
-
+			root.array = result;
+			root.power = (int)(Math.log(root.array.length) / Math.log(2));
+			this.head = root;
+			mergeDown_helper(root.next, root.array);
 		}
-
-
+		mergeDown_helper(root.next, C);
 	}
 
 	/**
@@ -257,10 +274,11 @@ public class Dictionary<AnyType extends Comparable<AnyType>>  implements Diction
 		int result = binarySearch_helper(a, item, 0, a.length - 1);
 		return result;
 
-		throw new RuntimeException("You need to implement this method!");
+		//throw new RuntimeException("You need to implement this method!");
 	}
 
 	/** Recursive binary search helper function */
+	@SuppressWarnings("unchecked")
 	private static int binarySearch_helper(Comparable[] a, Comparable item, int L, int H) {
 		int M = (L + H) / 2;
 		if (H < L) {
@@ -276,6 +294,8 @@ public class Dictionary<AnyType extends Comparable<AnyType>>  implements Diction
 		else if (item.compareTo(a[M]) == 0) {
 			return M;
 		}
+
+		return -1;
 	}
 
 	/**
@@ -320,7 +340,6 @@ public class Dictionary<AnyType extends Comparable<AnyType>>  implements Diction
 
 		return count;
 
-
 		//throw new RuntimeException("You need to implement this method!");
 	}
 
@@ -358,7 +377,7 @@ public class Dictionary<AnyType extends Comparable<AnyType>>  implements Diction
 
 		return newArray;
 
-		throw new RuntimeException("You need to implement this method!");
+		//throw new RuntimeException("You need to implement this method!");
 	}
 
 	/**
@@ -392,6 +411,8 @@ public class Dictionary<AnyType extends Comparable<AnyType>>  implements Diction
 		/*
 		 * Your code goes here...
 		 */
+
+
 
 		throw new RuntimeException("You need to implement this method!");
 	}
