@@ -62,10 +62,14 @@ public class Dictionary<AnyType extends Comparable<AnyType>>  implements Diction
 		/*
 		 * Your code goes here...
 		 */
+		Node newNode = new Node(0, new Comparable[power(2, 0)], null);
+		newNode.array[0] = e;
+		mergeDown();
+		size++;
 
+		
 
-
-		throw new RuntimeAnyTypexception("You need to implement this method!");
+		throw new RuntimeException("You need to implement this method!");
 	}
 
 	/**
@@ -81,9 +85,13 @@ public class Dictionary<AnyType extends Comparable<AnyType>>  implements Diction
 		/*
 		 * Your code goes here...
 		 */
+		if (!this.contains(e)) {
+			return;
+		}
 
 
-		throw new RuntimeAnyTypexception("You need to implement this method!");
+
+		throw new RuntimeException("You need to implement this method!");
 	}
 
 	/**
@@ -99,8 +107,22 @@ public class Dictionary<AnyType extends Comparable<AnyType>>  implements Diction
 		/*
 		 * Your code goes here...
 		 */
+		Node current = head;
 
-		throw new RuntimeAnyTypexception("You need to implement this method!");
+		while (current != null) {
+			boolean result = current.contains(e);
+
+			if (!result) {
+				current = current.next;
+			}
+			else {
+				return true;
+			}
+		}
+
+		return false;
+
+		//throw new RuntimeException("You need to implement this method!");
 	}
 
 	/**
@@ -118,8 +140,18 @@ public class Dictionary<AnyType extends Comparable<AnyType>>  implements Diction
 		/*
 		 * Your code goes here...
 		 */
+		int count = 0;
+		Node current = head;
 
-		throw new RuntimeAnyTypexception("You need to implement this method!");
+		while (current != null) {
+			int NCount = current.frequency(e);
+			count = count + NCount;
+			current = current.next;
+		}
+
+		return count;
+
+		//throw new RuntimeException("You need to implement this method!");
 	}
 
 	/**
@@ -147,14 +179,27 @@ public class Dictionary<AnyType extends Comparable<AnyType>>  implements Diction
 		 * Your code goes here...
 		 */
 
-		throw new RuntimeAnyTypexception("You need to implement this method!");
+		throw new RuntimeException("You need to implement this method!");
 	}
 
 	/**
 	 * Returns a helpful string representation of the dictionary.
 	 */
 	public String toString() {
-		return "";
+		StringBuffer content = new StringBuffer();
+		Node current = head;
+		int nodeIndex = 0;
+
+		while (current != null) {
+			content.append(nodeIndex + ": ");
+			content.append(current.toString());
+			content.append("\n");
+
+			current = current.next;
+			nodeIndex++;
+		}
+
+		return new String(content);
 	}
 
 
@@ -169,7 +214,7 @@ public class Dictionary<AnyType extends Comparable<AnyType>>  implements Diction
 		 * Your code goes here...
 		 */
 		Node temp = head;
-		mergeDown_helper(temp);
+		mergeDown_helper(temp, temp.array);
 
 
 
@@ -178,10 +223,19 @@ public class Dictionary<AnyType extends Comparable<AnyType>>  implements Diction
 
 		}
 
-		throw new RuntimeAnyTypexception("You need to implement this method!");
+		throw new RuntimeException("You need to implement this method!");
 	}
 
-	private void mergeDown_helper(Node root) {
+	private void mergeDown_helper(Node root, Comparable[] C) {
+ 		if (root == null) {
+ 			return;
+		}
+
+ 		if (root.array.length == C.length) {
+ 			Comparable[] result = merge(root.array, C);
+
+		}
+
 
 	}
 
@@ -200,8 +254,28 @@ public class Dictionary<AnyType extends Comparable<AnyType>>  implements Diction
 		/*
 		 * Your code goes here...
 		 */
+		int result = binarySearch_helper(a, item, 0, a.length - 1);
+		return result;
 
-		throw new RuntimeAnyTypexception("You need to implement this method!");
+		throw new RuntimeException("You need to implement this method!");
+	}
+
+	/** Recursive binary search helper function */
+	private static int binarySearch_helper(Comparable[] a, Comparable item, int L, int H) {
+		int M = (L + H) / 2;
+		if (H < L) {
+			return -1;
+		}
+
+		if (item.compareTo(a[M]) < 0) {
+			return binarySearch_helper(a, item, L, M - 1);
+		}
+		else if (item.compareTo(a[M]) > 0) {
+			return binarySearch_helper(a, item, M + 1, H);
+		}
+		else if (item.compareTo(a[M]) == 0) {
+			return M;
+		}
 	}
 
 	/**
@@ -218,8 +292,36 @@ public class Dictionary<AnyType extends Comparable<AnyType>>  implements Diction
 		/*
 		 * Your code goes here...
 		 */
+		int count = 0;
+		int index = binarySearch(a, item);
 
-		throw new RuntimeAnyTypexception("You need to implement this method!");
+		if (index != -1) {
+			count++;
+		}
+		else {
+			return 0;
+		}
+
+		int temp = index - 1;
+		while (temp >= 0) {
+			if (a[temp].compareTo(item) == 0) {
+				count++;
+			}
+			temp--;
+		}
+
+		temp = index + 1;
+		while (temp < a.length) {
+			if (a[temp].compareTo(item) == 0) {
+				count++;
+			}
+			temp++;
+		}
+
+		return count;
+
+
+		//throw new RuntimeException("You need to implement this method!");
 	}
 
 	/**
@@ -256,7 +358,7 @@ public class Dictionary<AnyType extends Comparable<AnyType>>  implements Diction
 
 		return newArray;
 
-		throw new RuntimeAnyTypexception("You need to implement this method!");
+		throw new RuntimeException("You need to implement this method!");
 	}
 
 	/**
@@ -291,7 +393,7 @@ public class Dictionary<AnyType extends Comparable<AnyType>>  implements Diction
 		 * Your code goes here...
 		 */
 
-		throw new RuntimeAnyTypexception("You need to implement this method!");
+		throw new RuntimeException("You need to implement this method!");
 	}
 
 	/**
