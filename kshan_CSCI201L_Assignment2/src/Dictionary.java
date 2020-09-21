@@ -90,7 +90,38 @@ public class Dictionary<AnyType extends Comparable<AnyType>>  implements Diction
 			return;
 		}
 
+		Node temp = head;
+		while (temp != null) {
+			int index = temp.indexOf(e);
 
+			if (index != -1) {
+				int nodePower = temp.power;
+				Comparable[] newArray = new Comparable[temp.array.length - 1];
+				System.arraycopy(temp.array, 0, newArray, 0, index);
+				System.arraycopy(temp.array, index + 1, newArray, index, temp.array.length - index - 1);
+				temp.array = newArray;
+
+				java.util.Queue<Comparable[]> splitResult = splitUp(temp.array, temp.power);
+
+				Comparable[] tempArray = splitResult.poll();
+				Dictionary<AnyType> newD = new Dictionary<>();
+				newD.head = new Node(nodePower - 1, tempArray, null);
+				tempArray = splitResult.poll();
+				nodePower--;
+
+				while (tempArray != null) {
+					nodePower--;
+					Node newNode = new Node(nodePower, tempArray, newD.head);
+					newD.head = newNode;
+					tempArray = splitResult.poll();
+				}
+
+				this.combine(newD);
+				break;
+			}
+
+			temp = temp.next;
+		}
 
 		throw new RuntimeException("You need to implement this method!");
 	}
@@ -167,7 +198,6 @@ public class Dictionary<AnyType extends Comparable<AnyType>>  implements Diction
 	 * 		-the resulting size is the sum of the two sizes
 	 */
 	public void combine(Dictionary<AnyType> other) {
-		//TODO:: rewrite mergeDown here
 		if(other == null || this == other) {
 			return;
 		}
@@ -178,7 +208,12 @@ public class Dictionary<AnyType extends Comparable<AnyType>>  implements Diction
 		this.size = this.size + other.size();
 
 		this.head = combine_helper(this.head, other.head);
-		this.mergeDown();
+
+		Node temp = head;
+		while (temp != null) {
+			this.mergeDown();
+			temp = temp.next;
+		}
 
 		//throw new RuntimeException("You need to implement this method!");
 	}
@@ -235,26 +270,46 @@ public class Dictionary<AnyType extends Comparable<AnyType>>  implements Diction
 		 * Your code goes here...
 		 */
 		Node temp = head;
-		mergeDown_helper(temp, temp.array);
+		mergeDown_helper(temp, temp.next);
 
 		//throw new RuntimeException("You need to implement this method!");
 	}
 
 	/** Recursively merge same size arrays helper function */
-	private void mergeDown_helper(Node root, Comparable[] C) {
- 		if (root == null) {
+	private void mergeDown_helper(Node current, Node nextNode) {
+		if (nextNode == null || current.array.length != nextNode.array.length) {
+			return;
+		}
+
+		if (nextNode.next == null || current.array.length != nextNode.next.array.length) {
+			Comparable[] result = merge(current.array, nextNode.array);
+			current.array = result;
+			current.next = nextNode.next;
+			current.power = (int)(Math.log(current.array.length) / Math.log(2));
+			mergeDown_helper(current, current.next);
+		}
+		else{
+			mergeDown_helper(current.next, current.next.next);
+			mergeDown_helper(current, current.next);
+		}
+	}
+
+	/*private void mergeDown_helper(Node root, Comparable[] C) {
+ 		if (root == null || root.array.length != C.length) {
  			return;
 		}
 
- 		if (root.array.length == C.length && root.next.array.length != C.length) {
+ 		if (root.next.array.length != C.length) {
  			Comparable[] result = merge(root.array, C);
 			root.array = result;
 			root.power = (int)(Math.log(root.array.length) / Math.log(2));
-			this.head = root;
+			//this.head = root;
 			mergeDown_helper(root.next, root.array);
 		}
-		mergeDown_helper(root.next, C);
-	}
+ 		else {
+			mergeDown_helper(root.next.next, root.next.array);
+		}
+	}*/
 
 	/**
 	 * Assumes a is sorted.
@@ -411,10 +466,20 @@ public class Dictionary<AnyType extends Comparable<AnyType>>  implements Diction
 		/*
 		 * Your code goes here...
 		 */
+		for (int i = 1; i <= k; i++) {
+			Comparable[] newArray = new Comparable[power(2, k - i)];
 
+			System.arraycopy(a, power(2, k - i) - 1, newArray, 0, power(2, k - i));
+			q.add(newArray);
 
+			/*for (int j = 0; j < newArray.length; j++) {
+				newArray[j] = a[power(2, k - i) + j - 1];
+			}*/
+		}
 
-		throw new RuntimeException("You need to implement this method!");
+		return q;
+
+		//throw new RuntimeException("You need to implement this method!");
 	}
 
 	/**
