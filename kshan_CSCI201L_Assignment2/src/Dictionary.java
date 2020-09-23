@@ -288,10 +288,10 @@ public class Dictionary<AnyType extends Comparable<AnyType>>  implements Diction
 			current.power = (int)(Math.log(current.array.length) / Math.log(2));
 			mergeDown_helper(current, current.next);
 		}
-		else{
-			mergeDown_helper(current.next, current.next.next);
-			mergeDown_helper(current, current.next);
-		}
+		//else{
+		//	mergeDown_helper(current.next, current.next.next);
+		//	mergeDown_helper(current, current.next);
+		//}
 	}
 
 	/*private void mergeDown_helper(Node root, Comparable[] C) {
