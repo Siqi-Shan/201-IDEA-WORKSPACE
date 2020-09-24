@@ -269,7 +269,7 @@ public class Dictionary<AnyType extends Comparable<AnyType>>  implements Diction
 		/*
 		 * Your code goes here...
 		 */
-		Node temp = head;
+		Node temp = this.head;
 		mergeDown_helper(temp, temp.next);
 
 		//throw new RuntimeException("You need to implement this method!");
@@ -277,11 +277,11 @@ public class Dictionary<AnyType extends Comparable<AnyType>>  implements Diction
 
 	/** Recursively merge same size arrays helper function */
 	private void mergeDown_helper(Node current, Node nextNode) {
-		if (nextNode == null || current.array.length != nextNode.array.length) {
+		if (current == null || nextNode == null) {
 			return;
 		}
 
-		if (nextNode.next == null || current.array.length != nextNode.next.array.length) {
+		if (current.power == nextNode.power) {
 			Comparable[] result = merge(current.array, nextNode.array);
 			current.array = result;
 			current.next = nextNode.next;
@@ -412,22 +412,26 @@ public class Dictionary<AnyType extends Comparable<AnyType>>  implements Diction
 		/*
 		 * Your code goes here...
 		 */
-		Comparable[] newArray = new Comparable[a.length+b.length];
+		Comparable[] newArray = new Comparable[a.length + b.length];
 		int i = 0;
 		int j = 0;
 		int k = 0;
 
-		while (i < (a.length + b.length) && j < (a.length + b.length)) {
+		while (i < a.length && j < b.length) {
 			if (a[i].compareTo(b[j]) < 0) {
-				newArray[k] = a[i];
-				i++;
-				k++;
+				newArray[k++] = a[i++];
 			}
 			else {
-				newArray[k] = a[j];
-				j++;
-				k++;
+				newArray[k++] = b[j++];
 			}
+		}
+
+		while (i < a.length) {
+			newArray[k++] = a[i++];
+		}
+
+		while (j < b.length) {
+			newArray[k++] = b[j++];
 		}
 
 		return newArray;
