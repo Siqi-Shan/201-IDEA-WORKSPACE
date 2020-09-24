@@ -27,7 +27,7 @@
  *
  *****************************************************************************/
 
-
+import java.util.Arrays;
 
 public class Dictionary<AnyType extends Comparable<AnyType>>  implements DictionaryInterface<AnyType>
 {
@@ -90,12 +90,12 @@ public class Dictionary<AnyType extends Comparable<AnyType>>  implements Diction
 			return;
 		}
 
-		Node temp = head;
-		while (temp != null) {
-			int index = temp.indexOf(e);
+		Node current = head;
+		while (current != null) {
+			int index = current.indexOf(e);
 
 			if (index != -1) {
-				int nodePower = temp.power;
+				/*int nodePower = temp.power;
 				Comparable[] newArray = new Comparable[temp.array.length - 1];
 				System.arraycopy(temp.array, 0, newArray, 0, index);
 				System.arraycopy(temp.array, index + 1, newArray, index, temp.array.length - index - 1);
@@ -117,13 +117,68 @@ public class Dictionary<AnyType extends Comparable<AnyType>>  implements Diction
 				}
 
 				this.combine(newD);
-				break;
+				break;*/
+
+				if (current == head) {
+					if (this.head.array.length == 1) {
+						this.head = null;
+						break;
+					}
+
+					Comparable[] newArray = new Comparable[current.array.length - 1];
+					System.arraycopy(current.array, 0, newArray, 0, index);
+					System.arraycopy(current.array, index + 1, newArray, index, current.array.length - index - 1);
+					current.array = newArray;
+
+					java.util.Queue<Comparable[]> splitResult = splitUp(current.array, current.power);
+
+					int currentPower = this.head.power - 1;
+					Node nextNode = this.head.next;
+					this.head.next = null;
+
+					for (Comparable[] temp : splitResult) {
+						Node newNode = new Node(currentPower, temp, nextNode);
+						this.head = newNode;
+						nextNode = newNode;
+						currentPower--;
+					}
+				}
+				else {
+					Comparable headNum = this.head.array[this.head.array.length - 1];
+					this.head.array[this.head.array.length - 1] = current.array[index];
+					current.array[index] = headNum;
+					Arrays.sort(this.head.array);
+					Arrays.sort(current.array);
+
+					if (this.head.array.length == 1) {
+						this.head = this.head.next;
+						break;
+					}
+
+					Comparable[] newArray = new Comparable[this.head.array.length - 1];
+					System.arraycopy(this.head.array, 0, newArray, 0, this.head.array.length - 1);
+					this.head.array = newArray;
+
+					java.util.Queue<Comparable[]> splitResult = splitUp(this.head.array, this.head.power);
+
+					int currentPower = this.head.power - 1;
+					Node nextNode = this.head.next;
+					this.head.next = null;
+
+					for (Comparable[] temp : splitResult) {
+						Node newNode = new Node(currentPower, temp, nextNode);
+						this.head = newNode;
+						nextNode = newNode;
+						currentPower--;
+					}
+				}
+
 			}
 
-			temp = temp.next;
+			current = current.next;
 		}
 
-		throw new RuntimeException("You need to implement this method!");
+		//throw new RuntimeException("You need to implement this method!");
 	}
 
 	/**
@@ -243,16 +298,14 @@ public class Dictionary<AnyType extends Comparable<AnyType>>  implements Diction
 	public String toString() {
 		StringBuffer content = new StringBuffer();
 		Node current = head;
-		int nodeIndex = 0;
 
 		while (current != null) {
 			//noinspection StringConcatenationInsideStringBufferAppend
-			content.append(nodeIndex + ": ");
+			content.append(current.power + ": ");
 			content.append(current.toString());
 			content.append("\n");
 
 			current = current.next;
-			nodeIndex++;
 		}
 
 		return new String(content);
@@ -276,7 +329,7 @@ public class Dictionary<AnyType extends Comparable<AnyType>>  implements Diction
 	}
 
 	/** Recursively merge same size arrays helper function */
-	private void mergeDown_helper(Node current, Node nextNode) {
+	/*private void mergeDown_helper(Node current, Node nextNode) {
 		if (current == null || nextNode == null) {
 			return;
 		}
@@ -292,24 +345,25 @@ public class Dictionary<AnyType extends Comparable<AnyType>>  implements Diction
 		//	mergeDown_helper(current.next, current.next.next);
 		//	mergeDown_helper(current, current.next);
 		//}
-	}
-
-	/*private void mergeDown_helper(Node root, Comparable[] C) {
- 		if (root == null || root.array.length != C.length) {
- 			return;
-		}
-
- 		if (root.next.array.length != C.length) {
- 			Comparable[] result = merge(root.array, C);
-			root.array = result;
-			root.power = (int)(Math.log(root.array.length) / Math.log(2));
-			//this.head = root;
-			mergeDown_helper(root.next, root.array);
-		}
- 		else {
-			mergeDown_helper(root.next.next, root.next.array);
-		}
 	}*/
+
+	private void mergeDown_helper(Node current, Node nextNode) {
+ 		if (nextNode == null || current.array.length != nextNode.array.length) {
+			return;
+		}
+
+		if (nextNode.next == null || current.array.length != nextNode.next.array.length) {
+			Comparable[] result = merge(current.array, nextNode.array);
+			current.array = result;
+			current.next = nextNode.next;
+			current.power = (int)(Math.log(current.array.length) / Math.log(2));
+			mergeDown_helper(current, current.next);
+		}
+		else{
+			mergeDown_helper(current.next, current.next.next);
+			mergeDown_helper(current, current.next);
+		}
+	}
 
 	/**
 	 * Assumes a is sorted.
