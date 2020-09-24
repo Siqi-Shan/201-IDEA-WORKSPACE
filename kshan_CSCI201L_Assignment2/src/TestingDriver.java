@@ -30,6 +30,7 @@ public class TestingDriver
 				throw new Exception();
 			}
 			d.add(2);
+			String temp = d.toString();
 			if(!d.toString().equals("1: [1, 2]\n"))
 			{
 				throw new Exception();
