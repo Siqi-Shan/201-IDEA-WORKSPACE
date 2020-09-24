@@ -95,30 +95,6 @@ public class Dictionary<AnyType extends Comparable<AnyType>>  implements Diction
 			int index = current.indexOf(e);
 
 			if (index != -1) {
-				/*int nodePower = temp.power;
-				Comparable[] newArray = new Comparable[temp.array.length - 1];
-				System.arraycopy(temp.array, 0, newArray, 0, index);
-				System.arraycopy(temp.array, index + 1, newArray, index, temp.array.length - index - 1);
-				temp.array = newArray;
-
-				java.util.Queue<Comparable[]> splitResult = splitUp(temp.array, temp.power);
-
-				Comparable[] tempArray = splitResult.poll();
-				Dictionary<AnyType> newD = new Dictionary<>();
-				newD.head = new Node(nodePower - 1, tempArray, null);
-				tempArray = splitResult.poll();
-				nodePower--;
-
-				while (tempArray != null) {
-					nodePower--;
-					Node newNode = new Node(nodePower, tempArray, newD.head);
-					newD.head = newNode;
-					tempArray = splitResult.poll();
-				}
-
-				this.combine(newD);
-				break;*/
-
 				if (current == head) {
 					if (this.head.array.length == 1) {
 						this.head = null;
@@ -132,7 +108,7 @@ public class Dictionary<AnyType extends Comparable<AnyType>>  implements Diction
 
 					java.util.Queue<Comparable[]> splitResult = splitUp(current.array, current.power);
 
-					int currentPower = this.head.power - 1;
+					/*int currentPower = this.head.power - 1;
 					Node nextNode = this.head.next;
 					this.head.next = null;
 
@@ -141,7 +117,9 @@ public class Dictionary<AnyType extends Comparable<AnyType>>  implements Diction
 						this.head = newNode;
 						nextNode = newNode;
 						currentPower--;
-					}
+					}*/
+
+					remove_helper(splitResult);
 				}
 				else {
 					Comparable headNum = this.head.array[this.head.array.length - 1];
@@ -161,7 +139,7 @@ public class Dictionary<AnyType extends Comparable<AnyType>>  implements Diction
 
 					java.util.Queue<Comparable[]> splitResult = splitUp(this.head.array, this.head.power);
 
-					int currentPower = this.head.power - 1;
+					/*int currentPower = this.head.power - 1;
 					Node nextNode = this.head.next;
 					this.head.next = null;
 
@@ -170,7 +148,9 @@ public class Dictionary<AnyType extends Comparable<AnyType>>  implements Diction
 						this.head = newNode;
 						nextNode = newNode;
 						currentPower--;
-					}
+					}*/
+
+					remove_helper(splitResult);
 				}
 
 			}
@@ -179,6 +159,20 @@ public class Dictionary<AnyType extends Comparable<AnyType>>  implements Diction
 		}
 
 		//throw new RuntimeException("You need to implement this method!");
+	}
+
+	/** Helper function that insert the split arrays back to linked list from the head */
+	private void remove_helper(java.util.Queue<Comparable[]> splitResult) {
+		int currentPower = this.head.power - 1;
+		Node nextNode = this.head.next;
+		this.head.next = null;
+
+		for (Comparable[] temp : splitResult) {
+			Node newNode = new Node(currentPower, temp, nextNode);
+			this.head = newNode;
+			nextNode = newNode;
+			currentPower--;
+		}
 	}
 
 	/**
