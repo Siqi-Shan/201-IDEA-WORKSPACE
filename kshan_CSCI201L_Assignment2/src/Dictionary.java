@@ -60,17 +60,13 @@ public class Dictionary<AnyType extends Comparable<AnyType>>  implements Diction
 			return;
 		}
 
-		/*
-		 * Your code goes here...
-		 */
+		//Create the new node and link it to the linked list
 		Node newNode = new Node(0, new Comparable[power(2, 0)], null);
 		newNode.array[0] = e;
 		newNode.next = this.head;
 		this.head = newNode;
 		mergeDown();
 		size++;
-
-		//throw new RuntimeException("You need to implement this method!");
 	}
 
 	/**
@@ -83,49 +79,41 @@ public class Dictionary<AnyType extends Comparable<AnyType>>  implements Diction
 			return;
 		}
 
-		/*
-		 * Your code goes here...
-		 */
+		//Whether the dictionary contains the element
 		if (!this.contains(e)) {
 			return;
 		}
 
+		//Find the element
 		Node current = head;
 		while (current != null) {
 			int index = current.indexOf(e);
 
+			//If the node array contains the element
 			if (index != -1) {
 				if (current == head) {
+					//If head node contains the element
 					if (this.head.array.length == 1) {
-						this.head = null;
+						this.head = this.head.next;
 						break;
 					}
 
+					//Remove the element from the array
 					Comparable[] newArray = new Comparable[current.array.length - 1];
 					System.arraycopy(current.array, 0, newArray, 0, index);
 					System.arraycopy(current.array, index + 1, newArray, index, current.array.length - index - 1);
 					current.array = newArray;
 
+					//Split the array and add back
 					java.util.Queue<Comparable[]> splitResult = splitUp(current.array, current.power);
-
-					/*int currentPower = this.head.power - 1;
-					Node nextNode = this.head.next;
-					this.head.next = null;
-
-					for (Comparable[] temp : splitResult) {
-						Node newNode = new Node(currentPower, temp, nextNode);
-						this.head = newNode;
-						nextNode = newNode;
-						currentPower--;
-					}*/
 
 					remove_helper(splitResult);
 				}
 				else {
+					//If other nodes contain element, swap with largest element in the head node array
 					Comparable headNum = this.head.array[this.head.array.length - 1];
 					this.head.array[this.head.array.length - 1] = current.array[index];
 					current.array[index] = headNum;
-					Arrays.sort(this.head.array);
 					Arrays.sort(current.array);
 
 					if (this.head.array.length == 1) {
@@ -139,34 +127,23 @@ public class Dictionary<AnyType extends Comparable<AnyType>>  implements Diction
 
 					java.util.Queue<Comparable[]> splitResult = splitUp(this.head.array, this.head.power);
 
-					/*int currentPower = this.head.power - 1;
-					Node nextNode = this.head.next;
-					this.head.next = null;
-
-					for (Comparable[] temp : splitResult) {
-						Node newNode = new Node(currentPower, temp, nextNode);
-						this.head = newNode;
-						nextNode = newNode;
-						currentPower--;
-					}*/
-
 					remove_helper(splitResult);
 				}
-
+				break;
 			}
 
 			current = current.next;
 		}
-
-		//throw new RuntimeException("You need to implement this method!");
 	}
 
 	/** Helper function that insert the split arrays back to linked list from the head */
 	private void remove_helper(java.util.Queue<Comparable[]> splitResult) {
+		//Insert all arrays before second node
 		int currentPower = this.head.power - 1;
 		Node nextNode = this.head.next;
 		this.head.next = null;
 
+		//Insert from largest to smallest arrays as nodes
 		for (Comparable[] temp : splitResult) {
 			Node newNode = new Node(currentPower, temp, nextNode);
 			this.head = newNode;
@@ -183,11 +160,8 @@ public class Dictionary<AnyType extends Comparable<AnyType>>  implements Diction
 			return false;
 		}
 
-		/*
-		 * Your code goes here...
-		 */
+		//Searching from head node
 		Node current = head;
-
 		while (current != null) {
 			boolean result = current.contains(e);
 
@@ -200,8 +174,6 @@ public class Dictionary<AnyType extends Comparable<AnyType>>  implements Diction
 		}
 
 		return false;
-
-		//throw new RuntimeException("You need to implement this method!");
 	}
 
 	/**
@@ -214,12 +186,9 @@ public class Dictionary<AnyType extends Comparable<AnyType>>  implements Diction
 			return 0;
 		}
 
-		/*
-		 * Your code goes here...
-		 */
+		//Counting number of elements from the head node
 		int count = 0;
 		Node current = head;
-
 		while (current != null) {
 			int NCount = current.frequency(e);
 			count = count + NCount;
@@ -227,8 +196,6 @@ public class Dictionary<AnyType extends Comparable<AnyType>>  implements Diction
 		}
 
 		return count;
-
-		//throw new RuntimeException("You need to implement this method!");
 	}
 
 	/**
@@ -251,20 +218,18 @@ public class Dictionary<AnyType extends Comparable<AnyType>>  implements Diction
 			return;
 		}
 
-		/*
-		 * Your code goes here...
-		 */
+		//Increase the size
 		this.size = this.size + other.size();
 
 		this.head = combine_helper(this.head, other.head);
 
+		//User mergeDown on every node to guarantee there are not two node with same array size
 		Node temp = head;
 		while (temp != null) {
 			this.mergeDown();
 			temp = temp.next;
 		}
 
-		//throw new RuntimeException("You need to implement this method!");
 	}
 
 	/** Recursively combining two linked lists with increasing order */
@@ -313,16 +278,10 @@ public class Dictionary<AnyType extends Comparable<AnyType>>  implements Diction
 	 * This is very useful for implementing add(e)!!!  See the lecture notes for the theory behind this.
 	 */
 	private void mergeDown() {
-		/*
-		 * Your code goes here...
-		 */
 		Node temp = this.head;
 		mergeDown_helper(temp, temp.next);
-
-		//throw new RuntimeException("You need to implement this method!");
 	}
 
-	/** Recursively merge same size arrays helper function */
 	/*private void mergeDown_helper(Node current, Node nextNode) {
 		if (current == null || nextNode == null) {
 			return;
@@ -341,20 +300,26 @@ public class Dictionary<AnyType extends Comparable<AnyType>>  implements Diction
 		//}
 	}*/
 
+	/** Recursively merge same size arrays helper function */
 	private void mergeDown_helper(Node current, Node nextNode) {
+		//If two nodes have same array size, stop recursion
  		if (nextNode == null || current.array.length != nextNode.array.length) {
 			return;
 		}
 
+ 		//Check to merge last two nodes with same array size to maintain array size in ascending order
 		if (nextNode.next == null || current.array.length != nextNode.next.array.length) {
 			Comparable[] result = merge(current.array, nextNode.array);
 			current.array = result;
 			current.next = nextNode.next;
 			current.power = (int)(Math.log(current.array.length) / Math.log(2));
+			//Recurse to next node
 			mergeDown_helper(current, current.next);
 		}
 		else{
+			//Go to next pairs of nodes
 			mergeDown_helper(current.next, current.next.next);
+			//Check previous nodes if there are still nodes with same array size
 			mergeDown_helper(current, current.next);
 		}
 	}
@@ -371,13 +336,8 @@ public class Dictionary<AnyType extends Comparable<AnyType>>  implements Diction
 	 */
 	@SuppressWarnings("unchecked")
 	public static int binarySearch(Comparable[] a, Comparable item) {
-		/*
-		 * Your code goes here...
-		 */
 		int result = binarySearch_helper(a, item, 0, a.length - 1);
 		return result;
-
-		//throw new RuntimeException("You need to implement this method!");
 	}
 
 	/** Recursive binary search helper function */
@@ -412,9 +372,6 @@ public class Dictionary<AnyType extends Comparable<AnyType>>  implements Diction
 	 */
 	@SuppressWarnings("unchecked")
 	public static int frequency(Comparable[] a, Comparable item) {
-		/*
-		 * Your code goes here...
-		 */
 		int count = 0;
 		int index = binarySearch(a, item);
 
@@ -425,6 +382,7 @@ public class Dictionary<AnyType extends Comparable<AnyType>>  implements Diction
 			return 0;
 		}
 
+		//Check elements before index
 		int temp = index - 1;
 		while (temp >= 0) {
 			if (a[temp].compareTo(item) == 0) {
@@ -433,6 +391,7 @@ public class Dictionary<AnyType extends Comparable<AnyType>>  implements Diction
 			temp--;
 		}
 
+		//Check elements after index
 		temp = index + 1;
 		while (temp < a.length) {
 			if (a[temp].compareTo(item) == 0) {
@@ -442,8 +401,6 @@ public class Dictionary<AnyType extends Comparable<AnyType>>  implements Diction
 		}
 
 		return count;
-
-		//throw new RuntimeException("You need to implement this method!");
 	}
 
 	/**
@@ -457,9 +414,6 @@ public class Dictionary<AnyType extends Comparable<AnyType>>  implements Diction
 	 */
 	@SuppressWarnings("unchecked")
 	public static Comparable[] merge(Comparable[] a, Comparable[] b) {
-		/*
-		 * Your code goes here...
-		 */
 		Comparable[] newArray = new Comparable[a.length + b.length];
 		int i = 0;
 		int j = 0;
@@ -483,8 +437,6 @@ public class Dictionary<AnyType extends Comparable<AnyType>>  implements Diction
 		}
 
 		return newArray;
-
-		//throw new RuntimeException("You need to implement this method!");
 	}
 
 	/**
@@ -508,30 +460,16 @@ public class Dictionary<AnyType extends Comparable<AnyType>>  implements Diction
 	 */
 	@SuppressWarnings("unchecked")
 	public static java.util.Queue<Comparable[]> splitUp(Comparable[] a, int k) {
-		/*
-		 * We'll just use a LinkedList as a Queue in this fashion.  Take a look at the
-		 * API for the java.util.Queue interface.
-		 */
-
 		java.util.Queue<Comparable[]> q = new java.util.LinkedList<Comparable[]>();
 
-		/*
-		 * Your code goes here...
-		 */
 		for (int i = 1; i <= k; i++) {
 			Comparable[] newArray = new Comparable[power(2, k - i)];
 
 			System.arraycopy(a, power(2, k - i) - 1, newArray, 0, power(2, k - i));
 			q.add(newArray);
-
-			/*for (int j = 0; j < newArray.length; j++) {
-				newArray[j] = a[power(2, k - i) + j - 1];
-			}*/
 		}
 
 		return q;
-
-		//throw new RuntimeException("You need to implement this method!");
 	}
 
 	/**
