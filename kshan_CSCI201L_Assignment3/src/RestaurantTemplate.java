@@ -35,6 +35,10 @@ public class RestaurantTemplate {
         return name;
     }
 
+    public ArrayList<String> getMenu() {
+        return menu;
+    }
+
     public void setDistance(double distance) {
         this.distance = distance;
     }

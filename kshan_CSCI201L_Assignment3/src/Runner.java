@@ -98,7 +98,12 @@ public class Runner {
         for (Restaurant restaurant : openRestaurants) {
             for (OrderTemplate order : orders) {
                 if (restaurant.verifyLocation(order.getOrderLocation())) {
-                    restaurant.addOrder(order);
+                    if (restaurant.verifyOrder(order.getFoodDelivered())) {
+                        restaurant.addOrder(order);
+                    }
+                    else {
+                        System.out.println("Order" + order.getFoodDelivered() + "invalid in Menu.");
+                    }
                 }
             }
         }

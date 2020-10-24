@@ -26,6 +26,11 @@ public class Restaurant extends Thread {
         return (restaurant.getName().equalsIgnoreCase(location));
     }
 
+    public boolean verifyOrder(String order) {
+        ArrayList<String> menu = restaurant.getMenu();
+        return menu.contains(order);
+    }
+
     public void run() {
         ExecutorService executor = Executors.newCachedThreadPool();
 
